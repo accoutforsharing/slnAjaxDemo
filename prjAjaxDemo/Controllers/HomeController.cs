@@ -23,6 +23,16 @@ namespace prjAjaxDemo.Controllers
             return View();
         }
 
+        public IActionResult FirstAjax()
+        {
+            return View();
+        }
+
+        public IActionResult CheckName()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

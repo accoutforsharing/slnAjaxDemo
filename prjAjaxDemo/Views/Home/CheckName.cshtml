@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewData["Title"] = "CheckName";
+}
+
+<h1>CheckName</h1>
+<input type="text" placeholder="name" id="inputname">
+<input type="button" value="Load" id="button1">
+<input type="button" value="Stop" id="button2">
+<div id="div1"></div>
+
+@section Scripts{
+    <script>
+        const name = document.querySelector("#inputname");
+        const btnLoad = document.querySelector("#button1");
+        const btnStop = document.querySelector("#button2");
+        const divMessage = document.querySelector("#div1");
+
+        //Step1 : 建立Ajax物件
+        const xhr = new XMLHttpRequest();
+        btnLoad.addEventListener('click', () => {
+
+            //Step3 : 接收伺服器回傳的結果(Response)
+            xhr.addEventListener("load", () => {
+                divMessage.innerHTML = xhr.responseText;
+                console.log("load");
+            })
+
+            //Step2 : 對伺服器發出要求(Request)
+            xhr.open("GET", `/api/checkname?name=${name.value}`);      //打開瀏覽器輸入網址
+            xhr.send();     //按下[enter]
+
+        })
+    </script>
+}
