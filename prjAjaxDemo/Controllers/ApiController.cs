@@ -82,11 +82,25 @@ namespace prjAjaxDemo.Controllers
             //return Content($"<h2>Hello {user.name}, You are {user.age} years old.\n Your mail is {user.email}</h2>", "text/plain", System.Text.Encoding.UTF8);
         }
 
+        //讀出城市名稱
         public IActionResult City()
         {
-            var cities = _context.Addresses.Select(c => new { c.City }).Distinct().OrderBy(c => c.City);     // OrderBy(c=>);
+            var cities = _context.Addresses.Select(c => new { c.City }).Distinct().OrderBy(c => c.City);
             return Json(cities);
         }
 
+        //讀出鄉鎮區
+        public IActionResult Districts(string city)
+        {
+            var districts = _context.Addresses.Where(d => d.City ==city).Select(d=>new { d.SiteId}).Distinct().OrderBy(d => d.SiteId);
+            return Json(districts);
+        }
+
+        //讀出路名
+        public IActionResult Roads(string siteId)
+        {
+            var roads = _context.Addresses.Where(r => r.SiteId == siteId).Select(r => new { r.Road }).Distinct().OrderBy(r => r.Road);
+            return Json(roads);
+        }
     }
 }
