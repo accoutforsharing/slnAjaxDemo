@@ -15,13 +15,13 @@ namespace prjAjaxDemo.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string name, int age)
+        public IActionResult Index(User user)
         {
             //System.Threading.Thread.Sleep(10000);
 
-            if (string.IsNullOrEmpty(name))
-                name = "Ajax";
-            return Content($"<h2>Hello {name}, You are {age} years old.</h2>", "text/plain", System.Text.Encoding.UTF8);
+            if (string.IsNullOrEmpty(user.name))
+                user.name = "Ajax";
+            return Content($"<h2>Hello {user.name}, You are {user.age} years old.</h2>", "text/plain", System.Text.Encoding.UTF8);
         }
 
         public IActionResult checkName(string name)

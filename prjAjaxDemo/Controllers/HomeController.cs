@@ -28,6 +28,19 @@ namespace prjAjaxDemo.Controllers
             return View();
         }
 
+        public IActionResult AjaxPost()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AjaxPost(User user)
+        {
+            ViewBag.name = user.name;
+            ViewBag.email = user.email;
+            ViewBag.age = user.age;
+            return View();
+        }
+
         public IActionResult CheckName()
         {
             return View();

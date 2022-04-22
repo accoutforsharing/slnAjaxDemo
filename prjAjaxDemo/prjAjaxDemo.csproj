@@ -13,4 +13,16 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Images\cat1.jpg" />
+    <None Include="wwwroot\Images\cat2.jpg" />
+    <None Include="wwwroot\Images\dog2.jpg" />
+    <None Include="wwwroot\Images\dog3.jpg" />
+    <None Include="wwwroot\Images\dog5.jpg" />
+  </ItemGroup>
+
 </Project>

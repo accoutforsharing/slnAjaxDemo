@@ -9,9 +9,13 @@
 <input type="button" value="Load" id="button1">
 <input type="button" value="Stop" id="button2">
 <div id="div1"></div>
+@*<img src="~/Images/cat1.jpg">
+<img src="~/Images/dog2.jpg">*@
+@{ 
 
+}
 @section Scripts{ 
-<script>
+    <script>
     const name = document.querySelector("#inputname");
     const age = document.querySelector("#inputage");
     const btnLoad = document.querySelector("#button1");
@@ -56,7 +60,15 @@
         })
 
         //Step2 : 對伺服器發出要求(Request)
-        xhr.open("GET", `/api/index?name=${name.value}&age=${age.value}`);      //打開瀏覽器輸入網址
+        @*@Url.Action()
+        @Url.Content()*@
+
+        @*const url = "@Url.Action("Index", "api")";*@
+        const url = "@Url.Content("~/api/index")";
+        const params = `?name=${name.value}&age=${age.value}`;
+
+        //xhr.open("GET", `/api/index?name=${name.value}&age=${age.value}`);      //打開瀏覽器輸入網址
+        xhr.open("GET", `${url}${params}`);
         //xhr.timeout = 5000;     //超過時間伺服器沒有回應，停止程式的執行
         xhr.send();     //按下[enter]
     })
@@ -64,5 +76,5 @@
     btnStop.addEventListener('click', () => {
         xhr.abort();
     })
-</script>
+    </script>
 }
