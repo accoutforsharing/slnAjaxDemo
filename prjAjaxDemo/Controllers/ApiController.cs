@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using prjAjaxDemo.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,10 +13,13 @@ namespace prjAjaxDemo.Controllers
     public class ApiController : Controller
     {
         private readonly DemoContext _context;
-        public ApiController(DemoContext context)
+        private readonly IWebHostEnvironment _host;
+        public ApiController(DemoContext context, IWebHostEnvironment host)
         {
             _context = context;
+            _host = host;
         }
+
 
         public IActionResult Index(User user)
         {
@@ -42,5 +48,45 @@ namespace prjAjaxDemo.Controllers
             }
             return Content("null");
         }
+
+        public IActionResult Register(Member member, IFormFile photo)
+        {
+            //D:\@Study\Homework\Restful+Ajax\slnAjaxDemo\prjAjaxDemo\wwwroot\Images\
+            //string info = $"{_host.WebRootPath} - {_host.ContentRootPath}";
+            //_host.WebRootPath => D:\@Study\Homework\Restful+Ajax\slnAjaxDemo\prjAjaxDemo\wwwroot
+
+            //將檔案儲存到Images資料夾
+            string ImagesFolder = Path.Combine(_host.WebRootPath, "Images", photo.FileName);
+            using (var fileStream = new FileStream(ImagesFolder, FileMode.Create))
+            {
+                photo.CopyTo(fileStream);
+            }
+
+            //將圖檔轉成二進位 memoryStream
+            byte[] bytes = null;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                photo.CopyTo(stream);
+                bytes = stream.ToArray();
+            }
+
+            //寫進資料庫
+            member.FileName = photo.FileName;
+            member.FileData = bytes;
+            _context.Members.Add(member);
+            _context.SaveChanges();
+
+            string info = $"{photo.FileName} - {photo.Length} - {photo.ContentType}";
+            //string info = ImagesFolder;
+            return Content(info, "text/plain", System.Text.Encoding.UTF8);
+            //return Content($"<h2>Hello {user.name}, You are {user.age} years old.\n Your mail is {user.email}</h2>", "text/plain", System.Text.Encoding.UTF8);
+        }
+
+        public IActionResult City()
+        {
+            var cities = _context.Addresses.Select(c => new { c.City }).Distinct().OrderBy(c => c.City);     // OrderBy(c=>);
+            return Json(cities);
+        }
+
     }
 }
