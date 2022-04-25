@@ -9,27 +9,107 @@
         <option value="2">Item2</option>
         <option value="3">Item3</option>*@
 </select>
-<select id="select2">
-</select>
-<select id="select3">
-</select>
+<select id="select2"></select>
+<select id="select3"></select>
 
 @section Scripts{
     <script>
         const selCity = document.querySelector("#select1");
-        const selRegion = document.querySelector("#select2");
-        const selRoad = document.querySelector("#select3");
-        selCity.addEventListener('change', () => {
-            console.log(selCity.options[selCity.selectedIndex].value);
+        const selDistricts = document.querySelector("#select2");
+        const selRoads = document.querySelector("#select3");
 
-        })
+        //============async await============
+        //#region async await method
+        //IIFE 立即執行函式
+        (async function LoadAddress() {
+            //載入城市
+            const cityResponse = await fetch("@Url.Content("~/api/city")");
+            renderCity(await cityResponse.json());
+
+            //載入鄉鎮區
+            const city = selCity.options[selCity.selectedIndex].value;
+            const districtResponse = await fetch("@Url.Content("~/api/districts")?city=" + city);
+            renderDistrict(await districtResponse.json());
+
+            //載入路名
+            const siteId = selDistricts.options[selDistricts.selectedIndex].value;
+            const roadResponse = fetch("@Url.Content("~/api/roads")?siteId=" + siteId);
+            renderRoad(await roadResponse.json());
+        })();
+        //#endregion
+
+        //============fetch============
+        //#region fetch method
+        @*fetch("@Url.Content("~/api/city")")
+            .then(response => response.json())
+            .then(datas => {
+                renderCity(datas);
+                const city = selCity.options[selCity.selectedIndex].value;
+                return fetch("@Url.Content("~/api/districts")?city=" + city)
+            })
+            .then(response => response.json())
+            .then(datas => {
+                renderDistrict(datas);
+                const siteId = selDistricts.options[selDistricts.selectedIndex].value;
+                return fetch("@Url.Content("~/api/roads")?siteId=" + siteId)
+            })
+            .then(response => response.json())
+            .then(datas => {
+                renderRoad(datas);
+            })
+            .catch(error => {
+                console.log("有錯誤 : " + error);
+            })*@
+        //#endregion
+
+        //============promise============
+        //#region promise method
+        @*ajaxCall("@Url.Content("~/api/city")")
+            .then(datas => {
+                renderCity(datas);
+                const city = selCity.options[selCity.selectedIndex].value;
+                return ajaxCall("@Url.Content("~/api/districts")?city="+city)
+            })
+            .then(datas => {
+                renderDistrict(datas);
+                const siteId = selDistricts.options[selDistricts.selectedIndex].value;
+                return ajaxCall("@Url.Content("~/api/roads")?siteId=" + siteId)
+            })
+            .then(datas => {
+                renderRoad(datas);
+            })
+            .catch(error => {
+                console.log("有錯誤 : " + error);
+            })
+
+        function ajaxCall(url) {
+            const promise = new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.addEventListener('load', () => {
+                    if (xhr.status == 200) {
+                        resolve(JSON.parse(xhr.responseText));
+                    }else {
+                        reject(Error(xhr.status));
+                    }
+                })
+                xhr.open("get", url);
+                xhr.send();
+            })
+            return promise;
+        }
+        }*@
+        //#endregion
+
+        //============Ajax============
+        //#region Ajax method
+@*//==========縣市資料載入select標籤中==========
     const xhr = new XMLHttpRequest();
     xhr.addEventListener('load', () => {
         const datas = JSON.parse(xhr.responseText);
         //console.log(datas);
 
         //Step4 : 讀出JSON資料
-        datas.forEach((item) => {
+        datas.forEach(item => {
             //console.log(item.city);
 
             //Step5 : 顯示資料
@@ -39,6 +119,108 @@
     })
 
     xhr.open("get", "@Url.Content("~/api/city")");
-    xhr.send();
+        xhr.send();
+        //==========鄉鎮區資料載入select標籤中==========
+         const xhr2 = new XMLHttpRequest();
+    xhr2.addEventListener('load', () => {
+        const datas = JSON.parse(xhr2.responseText);
+        //console.log(datas);
+
+        //Step4 : 讀出JSON資料
+        datas.forEach((item) => {
+            //console.log(item.city);
+
+            //Step5 : 顯示資料
+            const opt = new Option(item.siteId, item.siteId);
+            selCity.options.add(opt);
+        })
+    })
+
+    xhr2.open("get", "@Url.Content("~/api/city")");
+        xhr2.send();
+        //==========路名資料載入select標籤中==========
+        const xhr3 = new XMLHttpRequest();
+    xhr3.addEventListener('load', () => {
+        const datas = JSON.parse(xhr3.responseText);
+        //console.log(datas);
+
+        //Step4 : 讀出JSON資料
+        datas.forEach((item) => {
+            //console.log(item.city);
+
+            //Step5 : 顯示資料
+            const opt = new Option(item.road, item.road);
+            selCity.options.add(opt);
+        })
+    })
+
+    xhr3.open("get", "@Url.Content("~/api/city")");
+    xhr3.send();*@
+        //#endregion
+
+         //============change============
+        //#region change function
+        @* selCity.addEventListener('change', () => {
+            //console.log(selCity.options[selCity.selectedIndex].value);
+            const city = selCity.options[selCity.selectedIndex].value;
+            fetch("@Url.Content("~/api/districts")?city=" + city)
+                .then(response => response.json())
+                .then(datas => {
+                    renderDistrict(datas);
+                    const district = selDistricts.options[selDistricts.selectedIndex].value;
+                    return fetch("@Url.Content("~/api/roads")?district=" + district)
+                })
+                .then(response => response.json())
+                .then(datas => {
+                    renderRoad(datas);
+                })
+                .catch(error => {
+                    console.log("有錯誤：" + error);
+                })
+        })
+
+        selDistricts.addEventListener('change', () => {
+            const district = selDistricts.options[selDistricts.selectedIndex].value;
+            fetch("@Url.Content("~/api/roads")?district=" + district)
+                .then(response => response.json())
+                .then(datas => {
+                    renderRoad(datas);
+                })
+                .catch(error => {
+                    console.log("有錯誤：" + error);
+                })
+        }) *@
+        //#endregion
+
+        //============function============
+        //#region function
+        function renderCity(datas) {
+            datas.forEach(item => {
+                const opt = new Option(item.city, item.city);
+                selCity.options.add(opt);
+            })
+        }
+        function renderDistrict(datas) {
+            //清除原有的option標籤
+            while (selDistricts.length > 0) {
+                selDistricts.remove(selDistricts.length - 1)
+            }
+            datas.forEach(item => {
+                const opt = new Option(item.siteId, item.siteId);
+                selDistricts.options.add(opt);
+            })
+        }
+        function renderRoad(datas) {
+            //清除原有的option標籤
+            while (selRoads.length > 0) {
+                selRoads.remove(selRoads.length - 1)
+            }
+            datas.forEach(item => {
+                const opt = new Option(item.road, item.road);
+                selRoads.options.add(opt);
+            })
+        }
+        //#endregion
+
     </script>
 }

@@ -102,5 +102,12 @@ namespace prjAjaxDemo.Controllers
             var roads = _context.Addresses.Where(r => r.SiteId == siteId).Select(r => new { r.Road }).Distinct().OrderBy(r => r.Road);
             return Json(roads);
         }
+
+        public IActionResult GetImageByte(int id = 1)
+        {
+            Member member = _context.Members.Find(id);
+            byte[] img = member.FileData;
+            return File(img, "image/jpeg");
+        }
     }
 }
