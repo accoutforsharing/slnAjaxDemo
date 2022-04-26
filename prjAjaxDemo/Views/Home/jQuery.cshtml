@@ -58,7 +58,14 @@
             })
         })
         $('#buttonCors').click(function () {
-            $('#divAlert').text("CORs")
+            //$('#divAlert').text("CORs")
+            $.getJSON('@Url.Content("https://localhost:44328/api/shippers")', function (data) {
+                console.log(data);
+                let ul = $('<ul></ul>').addClass("list-group");
+                $.each(data, function (index, element) {
+                    const li = $('<li></li>').text(element.companyName).addClass("list-");
+                })
+            })
         })
     </script>
 }

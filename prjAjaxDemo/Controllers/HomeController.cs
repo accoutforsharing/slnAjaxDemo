@@ -66,6 +66,13 @@ namespace prjAjaxDemo.Controllers
             return View();
         }
 
+
+        public IActionResult Partial()
+        {
+            ViewBag.kk = "Hello Partial";
+            return PartialView();
+        }
+
         public IActionResult History()
         {
             return View();
@@ -76,10 +83,14 @@ namespace prjAjaxDemo.Controllers
             return View();
         }
 
-        public IActionResult Partial()
+        public IActionResult ShipperCors()
         {
-            ViewBag.kk = "Hello Partial";
-            return PartialView();
+            return View();
+        }
+
+        public IActionResult ShipperCorsEmpty()
+        {
+            return View();
         }
 
         public IActionResult Privacy()
