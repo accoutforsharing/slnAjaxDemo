@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewData["Title"] = "jQuery";
+}
+
+<h1>jQuery</h1>
+<button id="buttonGet" class="btn btn-primary">get</button>
+<button id="buttonPost" class="btn btn-secondary">post</button>
+<button id="buttonJson" class="btn btn-success">getJson</button>
+<button id="buttonLoad" class="btn btn-info">load</button>
+<button id="buttonAjax" class="btn btn-warning">ajax</button>
+<button id="buttonCors" class="btn btn-danger">cors</button>
+<div class="alert alert-dark mt-3 w-50" role="alert" id="divAlert">
+
+</div>
+@section Scripts{
+    <script>
+        $('#buttonGet').click(function () {
+          //$('#divAlert').text("GET")
+            $.get('@Url.Content("~/api/index")', { "name": "Jack","age": "20" }, function (data) {
+                $('#divAlert').html(data)
+            })
+        })
+        $('#buttonPost').click(function () {
+            //$('#divAlert').text("POST")
+            $.post('@Url.Content("~/api/index")', { "name": "Jack","age": "20" }, function (data) {
+                $('#divAlert').html(data)
+            })
+        })
+        $('#buttonJson').click(function () {
+            //$('#divAlert').text("JSON")
+            $.getJSON('@Url.Content("~/api/city")', function (data) {
+                //console.log(data);
+                let ul = $('<ul></ul>').addClass('list-group')
+                $.each(data, function (index, element) {
+                    //console.log(element.city);
+                    const li = $('<li></li>').text(element.city).addClass('list-group-item')
+                    ul.append(li);
+                })
+                $('#divAlert').html(ul)
+            })
+
+        })
+        $('#buttonLoad').click(function () {
+            //$('#divAlert').text("LOAD")
+            $('#divAlert').load('@Url.Content("~/home/partial")')
+        })
+        $('#buttonAjax').click(function () {
+            //$('#divAlert').text("AJAX")
+            $.ajax({
+                url: '@Url.Content("~/api/city")', @*'@Url.Content("~/api/index")'*@
+                type: 'get',    //post
+                dataType:'json',
+                //data: { "name": "Paul", "age": 30}
+            }).done(function (data){
+                /* $('#divAlert').html(data)*/
+                console.log(data);
+            })
+        })
+        $('#buttonCors').click(function () {
+            $('#divAlert').text("CORs")
+        })
+    </script>
+}

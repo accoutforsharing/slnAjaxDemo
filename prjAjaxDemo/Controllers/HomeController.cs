@@ -66,6 +66,22 @@ namespace prjAjaxDemo.Controllers
             return View();
         }
 
+        public IActionResult History()
+        {
+            return View();
+        }
+
+        public IActionResult jQuery()
+        {
+            return View();
+        }
+
+        public IActionResult Partial()
+        {
+            ViewBag.kk = "Hello Partial";
+            return PartialView();
+        }
+
         public IActionResult Privacy()
         {
             return View();
